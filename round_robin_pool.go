@@ -179,13 +179,13 @@ func Create() *Builder {
 type Builder struct {
 	zkConn           *zk.Conn
 	zkProxyDir       string
-	zkAddr           string
+	zkAddr           []string
 	zkSessionTimeout time.Duration
 	options          *redis.Options
 }
 
 // Set zooKeeper params
-func (b *Builder) ZooKeeperClient(zkAddr string, zkSessionTimeout time.Duration) *Builder {
+func (b *Builder) ZooKeeperClient(zkAddr []string, zkSessionTimeout time.Duration) *Builder {
 	b.zkAddr = zkAddr
 	b.zkSessionTimeout = zkSessionTimeout
 	return b
@@ -210,10 +210,10 @@ func (b *Builder) validate() (err error) {
 		return
 	}
 	if b.zkConn == nil {
-		if b.zkAddr == "" {
+		if b.zkAddr == nil {
 			err = New("zk client can not be null")
 		}
-		b.zkConn, _, err = zk.Connect([]string{b.zkAddr}, b.zkSessionTimeout)
+		b.zkConn, _, err = zk.Connect(b.zkAddr, b.zkSessionTimeout)
 		if err != nil {
 			return err
 		}
