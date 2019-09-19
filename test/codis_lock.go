@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-redis/redis"
 	"github.com/hero5512/godis-codis/util"
 	"sync"
 	"time"
@@ -35,10 +36,16 @@ func increace() {
 	getResp := client.Get(CounterKey)
 	cntValue, err := getResp.Int64()
 	println("current counter is:", cntValue)
-
-	if err == nil {
+	if err == redis.Nil {
+		resp := client.Set(CounterKey, 1, time.Second*30)
+		_, err := resp.Result()
+		if err != nil {
+			// log err
+			println("set value error!")
+		}
+	} else if err == nil {
 		cntValue++
-		resp := client.Set(CounterKey, cntValue, 0)
+		resp := client.Set(CounterKey, cntValue, time.Second*30)
 		_, err := resp.Result()
 		if err != nil {
 			// log err
@@ -66,6 +73,5 @@ func main() {
 		}()
 	}
 	wg.Wait()
-	//increace()
-
+	defer util.Close()
 }

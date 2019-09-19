@@ -33,3 +33,9 @@ func GetPool() (roundRobinPool *RoundRobinPool, err error) {
 	})
 	return pool, err
 }
+
+func Close() {
+	if pool != nil {
+		pool.Close()
+	}
+}
