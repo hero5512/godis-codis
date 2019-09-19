@@ -26,5 +26,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	println(v1)
+	println("redis result: " + v1)
 }

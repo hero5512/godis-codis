@@ -169,6 +169,7 @@ func (p *RoundRobinPool) Close() {
 	for _, pool := range pools {
 		pool.Client.Close()
 	}
+
 }
 
 // Create a RoundRobinPool using the fluent style api.
